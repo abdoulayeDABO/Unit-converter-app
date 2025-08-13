@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -58,7 +59,7 @@ fun UnitConverter() {
     var outputUnit by remember { mutableStateOf("Livre") }
     var inputUnitDropdownExpanded by remember { mutableStateOf(false) }
     var outputUnitDropdownExpanded by remember { mutableStateOf(false) }
-//    var converionFactor by remember { mutableStateOf(0.0) }
+
 
     fun convert (): Double {
         val inputValue = input.toDoubleOrNull() ?: 0.0
@@ -139,7 +140,8 @@ fun UnitConverter() {
                     expanded = inputUnitDropdownExpanded,
                     onDismissRequest = {
                         inputUnitDropdownExpanded = false
-                    }
+                    },
+                    modifier = Modifier.width(180.dp)
                 ) {
                     DropdownMenuItem(text = { Text("Kilogrammes") }, onClick = {
                         inputUnit = "Kilogrammes"
@@ -179,7 +181,9 @@ fun UnitConverter() {
                     expanded = outputUnitDropdownExpanded,
                     onDismissRequest = {
                         outputUnitDropdownExpanded = false
-                    }
+                    },
+                    modifier = Modifier.width(180.dp)
+
                 ) {
                     DropdownMenuItem(text = { Text("Kilogrammes") }, onClick = {
                         outputUnit = "Kilogrammes"
@@ -211,166 +215,4 @@ fun UnitConverter() {
 
     }
 
-}
-
-
-@Composable
-fun LoginForm() {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
-    var isLoading by remember { mutableStateOf(false) }
-    var showDialog by remember { mutableStateOf(false) }
-    var dialogMessage by remember { mutableStateOf("") }
-
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        // Titre
-        Text(
-            text = "Connexion",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = "Connectez-vous à votre compte",
-            fontSize = 16.sp,
-            color = Color.Gray,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Champ Email
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            placeholder = { Text("exemple@email.com") },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Email,
-                    contentDescription = "Email"
-                )
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Email
-            ),
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Champ Mot de passe
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Mot de passe") },
-            placeholder = { Text("Votre mot de passe") },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Lock,
-                    contentDescription = "Password"
-                )
-            },
-            trailingIcon = {
-                TextButton(
-                    onClick = { passwordVisible = !passwordVisible }
-                ) {
-                    Text(
-                        text = if (passwordVisible) "Masquer" else "Afficher",
-                        fontSize = 12.sp
-                    )
-                }
-            },
-            visualTransformation = if (passwordVisible) VisualTransformation.None
-            else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password
-            ),
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Bouton de connexion avec loader
-        Button(
-            onClick = {
-                if (email.isNotEmpty() && password.isNotEmpty()) {
-                    isLoading = true
-                }
-            },
-            enabled = !isLoading,
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp)
-        ) {
-            if (isLoading) {
-                CircularProgressIndicator(
-                    color = Color.White,
-                    strokeWidth = 2.dp,
-                    modifier = Modifier.size(24.dp)
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = "Connexion en cours...",
-                    fontSize = 16.sp
-                )
-            } else {
-                Text(
-                    text = "Se connecter",
-                    fontSize = 16.sp
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Lien mot de passe oublié
-        TextButton(
-            onClick = { },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Mot de passe oublié ?")
-        }
-    }
-
-    // Simulation d'authentification
-    LaunchedEffect(isLoading) {
-        if (isLoading) {
-            delay(2000)
-            isLoading = false
-            dialogMessage = "Connexion réussie pour $email"
-            showDialog = true
-        }
-    }
-
-    // Dialog simple
-    if (showDialog) {
-        AlertDialog(
-            onDismissRequest = { showDialog = false },
-            title = { Text("Résultat") },
-            text = { Text(dialogMessage) },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showDialog = false
-                        email = ""
-                        password = ""
-                    }
-                ) {
-                    Text("OK")
-                }
-            }
-        )
-    }
 }
